@@ -10,8 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.peak.androidutilslibrary.constant.MemoryConstants;
-import com.peak.androidutilslibrary.constant.TimeConstants;
+import com.next.androidutilslibrary.constant.MemoryConstants;
+import com.next.androidutilslibrary.constant.TimeConstants;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

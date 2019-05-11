@@ -1,6 +1,6 @@
 package com.next.androidutilslibrary;
 
-import com.peak.androidutilslibrary.constant.TimeConstants;
+import com.next.androidutilslibrary.constant.TimeConstants;
 
 import java.text.DateFormat;
 import java.text.ParseException;

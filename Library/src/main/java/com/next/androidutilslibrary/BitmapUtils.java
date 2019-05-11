@@ -31,7 +31,7 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.core.content.ContextCompat;
 
-import com.peak.androidutilslibrary.constant.MemoryConstants;
+import com.next.androidutilslibrary.constant.MemoryConstants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

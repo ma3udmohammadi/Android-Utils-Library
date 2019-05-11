@@ -1,6 +1,6 @@
 package com.next.androidutilslibrary;
 
-import com.peak.androidutilslibrary.constant.RegexConstants;
+import com.next.androidutilslibrary.constant.RegexConstants;
 
 import java.util.ArrayList;
 import java.util.List;
