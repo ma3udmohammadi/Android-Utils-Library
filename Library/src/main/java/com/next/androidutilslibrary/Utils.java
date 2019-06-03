@@ -30,7 +30,7 @@ public final class Utils
 		synchronized (Utils.class)
 		{
 			if (Utils.context == null)
-				throw new NullPointerException("Call Base.initialize(context) within your Application onCreate() method.");
+				throw new NullPointerException("Call Utils.initialize(context) within your Application onCreate() method.");
 
 			return Utils.context.getApplicationContext();
 		}

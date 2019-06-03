@@ -1,7 +1,11 @@
 package com.next.androidutils;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
+import com.next.androidutilslibrary.NotificationUtils;
+import com.next.androidutilslibrary.Utils;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -11,5 +15,9 @@ public class MainActivity extends AppCompatActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Utils.initialize(getApplicationContext());
+		NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+		notificationUtils.createChannel("PERSONAL", "Personal");
+		notificationUtils.sendNotificationInDefaultChannel("Timer is running ...", "05:03", R.drawable.ic_timer_black_24dp, 101);
 	}
 }
