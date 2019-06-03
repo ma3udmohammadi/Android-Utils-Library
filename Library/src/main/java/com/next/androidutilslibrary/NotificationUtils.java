@@ -7,8 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 
@@ -17,16 +15,11 @@ import androidx.core.app.NotificationCompat;
 public class NotificationUtils extends ContextWrapper
 {
 	private NotificationManager notificationManager;
-
-	// private String DEFAULT_CHANNEL_ID = "DEFAULT";
-	// private String DEFAULT_CHANNEL_NAME = "DEFAULT CHANNEL";
-	// private String pkgName = "notification.channel";
 	private Context context;
 	private String channelId;
 	private String channelName;
 	private boolean makeSound;
 	private boolean vibrate;
-	private boolean showBadge;
 
 	public NotificationUtils(Context context)
 	{
@@ -40,6 +33,8 @@ public class NotificationUtils extends ContextWrapper
 		{
 			this.channelId = channelId;
 			this.channelName = channelName;
+			this.makeSound = makeSound;
+			this.vibrate = vibrate;
 			// create android channel
 			NotificationChannel newChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
 
@@ -142,5 +137,10 @@ public class NotificationUtils extends ContextWrapper
 		}
 
 		builder.setStyle(inboxStyle);
+	}
+
+	public void closeNotification(int notificationId)
+	{
+		notificationManager.cancel(notificationId);
 	}
 }
