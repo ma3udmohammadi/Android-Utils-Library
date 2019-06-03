@@ -69,14 +69,14 @@ public class NotificationUtils extends ContextWrapper
 
 	public void sendNotificationInDefaultChannel(String title, String body, int icon, int notificationId)
 	{
-		Intent resultIntent = new Intent(this, Utils.getApp().getApplicationContext().getClass());
+		Intent resultIntent = new Intent(this, this.getClass());
 		sendNotificationInChannel(notificationId, resultIntent, getDefaultNotificationBuilder(title, body, icon, DEFAULT_CHANNEL_ID));
 	}
 
 
 	public void sendBigNotificationInDefaultChannel(String title, String body, int icon, int notificationId)
 	{
-		Intent resultIntent = new Intent(this, Utils.getApp().getApplicationContext().getClass());
+		Intent resultIntent = new Intent(this, this.getClass());
 		NotificationCompat.Builder builder = getDefaultNotificationBuilder(title, body, icon, DEFAULT_CHANNEL_ID);
 		builder = convertToBigNotificationBuilder(builder);
 		sendNotificationInChannel(notificationId, resultIntent, builder);
