@@ -21,10 +21,12 @@ public class NotificationUtils extends ContextWrapper
 	private String DEFAULT_CHANNEL_ID = "DEFAULT";
 	private String DEFAULT_CHANNEL_NAME = "DEFAULT CHANNEL";
 	private String pkgName = "notification.channel";
+	private Context context;
 
 	public NotificationUtils(Context context)
 	{
 		super(context);
+		this.context = context;
 		pkgName = context.getPackageName() != null ? context.getPackageName() : pkgName;
 		DEFAULT_CHANNEL_ID = pkgName + "." + DEFAULT_CHANNEL_ID.toUpperCase();
 		createChannel(DEFAULT_CHANNEL_ID, DEFAULT_CHANNEL_NAME);
@@ -69,14 +71,14 @@ public class NotificationUtils extends ContextWrapper
 
 	public void sendNotificationInDefaultChannel(String title, String body, int icon, int notificationId)
 	{
-		Intent resultIntent = new Intent(this, this.getClass());
+		Intent resultIntent = new Intent(context, context.getClass());
 		sendNotificationInChannel(notificationId, resultIntent, getDefaultNotificationBuilder(title, body, icon, DEFAULT_CHANNEL_ID));
 	}
 
 
 	public void sendBigNotificationInDefaultChannel(String title, String body, int icon, int notificationId)
 	{
-		Intent resultIntent = new Intent(this, this.getClass());
+		Intent resultIntent = new Intent(context, context.getClass());
 		NotificationCompat.Builder builder = getDefaultNotificationBuilder(title, body, icon, DEFAULT_CHANNEL_ID);
 		builder = convertToBigNotificationBuilder(builder);
 		sendNotificationInChannel(notificationId, resultIntent, builder);
