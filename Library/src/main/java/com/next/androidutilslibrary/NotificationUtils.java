@@ -7,10 +7,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
@@ -18,34 +18,44 @@ public class NotificationUtils extends ContextWrapper
 {
 	private NotificationManager notificationManager;
 
-	private String DEFAULT_CHANNEL_ID = "DEFAULT";
-	private String DEFAULT_CHANNEL_NAME = "DEFAULT CHANNEL";
-	private String pkgName = "notification.channel";
+	// private String DEFAULT_CHANNEL_ID = "DEFAULT";
+	// private String DEFAULT_CHANNEL_NAME = "DEFAULT CHANNEL";
+	// private String pkgName = "notification.channel";
 	private Context context;
+	private String channelId;
+	private String channelName;
+	private boolean makeSound;
+	private boolean vibrate;
+	private boolean showBadge;
 
 	public NotificationUtils(Context context)
 	{
 		super(context);
 		this.context = context;
-		pkgName = context.getPackageName() != null ? context.getPackageName() : pkgName;
-		DEFAULT_CHANNEL_ID = pkgName + "." + DEFAULT_CHANNEL_ID.toUpperCase();
-		createChannel(DEFAULT_CHANNEL_ID, DEFAULT_CHANNEL_NAME);
 	}
 
-	public void createChannel(String CHANNEL_ID, String CHANNEL_NAME)
+	public void createChannel(String channelId, String channelName, boolean makeSound, boolean vibrate, boolean showBadge)
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
 		{
+			this.channelId = channelId;
+			this.channelName = channelName;
 			// create android channel
-			NotificationChannel newChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+			NotificationChannel newChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+
 			// Sets whether notifications posted to this channel should display notification lights
-			newChannel.enableLights(true);
+			// newChannel.enableLights(false);
 			// Sets whether notification posted to this channel should vibrate.
-			newChannel.enableVibration(true);
+			if (!vibrate)
+				newChannel.enableVibration(false);
+			if (!makeSound)
+				newChannel.setSound(null, null);
+			if (!showBadge)
+				newChannel.setShowBadge(false);
 			// Sets the notification light color for notifications posted to this channel
-			newChannel.setLightColor(Color.GREEN);
+			// newChannel.setLightColor(Color.RED);
 			// Sets whether notifications posted to this channel appear on the lockscreen or not
-			newChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+			// newChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 			getNotificationManager().createNotificationChannel(newChannel);
 		}
 	}
@@ -69,44 +79,47 @@ public class NotificationUtils extends ContextWrapper
 		getNotificationManager().notify(notificationId, builder.build());
 	}
 
-	public void sendNotificationInDefaultChannel(String title, String body, int icon, int notificationId)
+	public void sendNotificationInChannel(String title, String body, int icon, boolean ongoing, int notificationId)
 	{
 		Intent resultIntent = new Intent(context, context.getClass());
-		sendNotificationInChannel(notificationId, resultIntent, getDefaultNotificationBuilder(title, body, icon, DEFAULT_CHANNEL_ID));
+		sendNotificationInChannel(notificationId, resultIntent, getDefaultNotificationBuilder(title, body, icon, ongoing, channelId));
 	}
 
-
-	public void sendBigNotificationInDefaultChannel(String title, String body, int icon, int notificationId)
+	public void sendBigNotificationInChannel(String title, String body, int icon, boolean ongoing, int notificationId)
 	{
 		Intent resultIntent = new Intent(context, context.getClass());
-		NotificationCompat.Builder builder = getDefaultNotificationBuilder(title, body, icon, DEFAULT_CHANNEL_ID);
-		builder = convertToBigNotificationBuilder(builder);
+		NotificationCompat.Builder builder = getDefaultNotificationBuilder(title, body, icon, ongoing, channelId);
+		convertToBigNotificationBuilder(builder);
 		sendNotificationInChannel(notificationId, resultIntent, builder);
 	}
 
-
-	private NotificationCompat.Builder getDefaultNotificationBuilder(String title, String body, int icon, String channelId)
+	private NotificationCompat.Builder getDefaultNotificationBuilder(String title, String body, int icon, boolean ongoing, String channelId)
 	{
 		Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-		return new NotificationCompat.Builder(getApplicationContext(),
-				channelId)
-				// set title
-				.setContentTitle(title)
-				// set body
-				.setContentText(body)
-				// set ticker
-				.setTicker("Notification")
-				// set notification sound
-				.setSound(defaultSoundUri)
-				// set small icon
-				.setSmallIcon(icon)
-				// set auto cancel behaviour
-				.setAutoCancel(true);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channelId);
+		// set title
+		builder.setContentTitle(title);
+		// set body
+		builder.setContentText(body);
+		// set ticker
+		builder.setTicker("Notification");
+		// set notification sound
+		builder.setSound(defaultSoundUri);
+		if (!makeSound)
+			builder.setSound(null);
+		if (!vibrate)
+			builder.setVibrate(new long[]{0L});
+		builder.setDefaults(Notification.DEFAULT_LIGHTS);
+		builder.setOngoing(ongoing);
+		// set small icon
+		builder.setSmallIcon(icon);
+		// set auto cancel behaviour
+		builder.setAutoCancel(true);
+		return builder;
 	}
 
-
-	private NotificationCompat.Builder convertToBigNotificationBuilder(NotificationCompat.Builder builder)
+	private void convertToBigNotificationBuilder(NotificationCompat.Builder builder)
 	{
 		/* Add Big View Specific Configuration */
 		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
@@ -129,6 +142,5 @@ public class NotificationUtils extends ContextWrapper
 		}
 
 		builder.setStyle(inboxStyle);
-		return builder;
 	}
 }
