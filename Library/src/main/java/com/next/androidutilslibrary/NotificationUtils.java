@@ -74,9 +74,8 @@ public class NotificationUtils extends ContextWrapper
 		getNotificationManager().notify(notificationId, builder.build());
 	}
 
-	public void sendNotificationInChannel(String title, String body, int icon, boolean ongoing, int notificationId)
+	public void sendNotificationInChannel(String title, String body, int icon, boolean ongoing, int notificationId, Intent resultIntent)
 	{
-		Intent resultIntent = new Intent(context, context.getClass());
 		sendNotificationInChannel(notificationId, resultIntent, getDefaultNotificationBuilder(title, body, icon, ongoing, channelId));
 	}
 
@@ -88,7 +87,7 @@ public class NotificationUtils extends ContextWrapper
 		sendNotificationInChannel(notificationId, resultIntent, builder);
 	}
 
-	private NotificationCompat.Builder getDefaultNotificationBuilder(String title, String body, int icon, boolean ongoing, String channelId)
+	public NotificationCompat.Builder getDefaultNotificationBuilder(String title, String body, int icon, boolean ongoing, String channelId)
 	{
 		Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
